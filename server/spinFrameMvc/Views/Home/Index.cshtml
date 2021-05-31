@@ -1,0 +1,105 @@
+﻿@model List<spinFrameMvc.Models.Car>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js" type="text/javascript"></script>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+@if (TempData["carAlreadyExist"] != null && (bool)TempData["carAlreadyExist"])
+{
+    <script type="text/javascript">
+
+            window.onload = function () {
+                alert("This plate already exist in the data base!");
+                @TempData["carAlreadyExist"] = false;
+            };
+    </script>
+}
+
+@if (TempData["carNotFound"] != null && (bool)TempData["carNotFound"])
+{
+    <script type="text/javascript">
+
+            window.onload = function () {
+                alert("Can't find this car!");
+                @TempData["carNotFound"] = false;
+            };
+    </script>
+
+}
+
+<button style="margin: 20" class="btn btn-primary" data-toggle="modal" onclick="newCar()" data-target="#mainModal">Add new car</button>
+
+
+<table class="table table-hover">
+    <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Plate</th>
+            <th scope="col">Color</th>
+            <th scope="col">Manufactor</th>
+            <th scope="col">Model</th>
+            <th scope="col">Year</th>
+        </tr>
+    </thead>
+    <tbody>
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <th scope="row">@(i + 1)</th>
+                <td>@Model[i].CarPlate</td>
+                <td>@Model[i].Color</td>
+                <td>@Model[i].Manufactor</td>
+                <td>@Model[i].Model</td>
+                <td>@Model[i].Year</td>
+                <td>
+                    <button class="btn btn-danger" data-toggle="modal" OnClick="deleteCar('@Model[i].CarPlate')" data-target="#mainModal">Delete</button>
+                    <button class="btn btn-info" data-toggle="modal" onclick="showDetails('@Model[i].CarPlate')" data-target="#mainModal">Details</button>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="modal" id="mainModal">
+    <div class="modal-dialog">
+        <div id="modalContent" class="modal-content"></div>
+    </div>
+</div>
+
+<script>
+    function deleteCar(car) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("OpenDeleteCar")',
+            data: { carPlate: car },
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                $("#modalContent").html(res);
+            }
+        });
+    }
+
+    function showDetails(car) {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("OpenDetails")',
+            data: { carPlate: car },
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                $("#modalContent").html(res);
+            }
+        });
+    }
+
+    function newCar() {
+        $.ajax({
+            type: "GET",
+            url: '@Url.Action("OpenAddNewCar")',
+            contentType: "application/json; charset=utf-8",
+            success: function (res) {
+                $("#modalContent").html(res);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,49 @@
+﻿@model spinFrameMvc.Models.Car
+@using spinFrameMvc.Models;
+
+<div class="modal-header">
+    <h2 class="modal-title" id="deleteCarTitle">Details about car @Model.CarPlate</h2>
+    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<div class="modal-body">
+    <form action="Home/UpdateCar" method="get">
+        <table class="table table-striped">
+            <tr hidden>
+                <td>Plate: </td>
+                <td><input id="txtPlate" type="text" name="plate" value="@Model.CarPlate" /></td>
+            </tr>
+            <tr>
+                <td>Car color: </td>
+                <td value="@Model.Color">
+                    @Html.DropDownListFor(m => m.Color,
+       EnumHelper.GetSelectList(typeof(CarColor)))
+                </td>
+            </tr>
+            <tr>
+                <td>Manufactor: </td>
+                <td value="@Model.Manufactor">
+                    @Html.DropDownListFor(m => m.Manufactor,
+       EnumHelper.GetSelectList(typeof(CarManufactor)))
+                </td>
+                <td>@*<input id="txtManufactor" type="text" name="manufactor" value="@Model.Manufactor" required/>*@</td>
+            </tr>
+            <tr>
+                <td>Model: </td>
+                <td><input id="txtManufactor" type="text" name="model" value="@Model.Model" required /></td>
+            </tr>
+            <tr>
+                <td>Year (2012-2021): </td>
+                <td><input id="numYear" type="number" name="year" value="@Model.Year" /></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input type="submit" value="Submit Form" /></td>
+            </tr>
+        </table>
+    </form>
+</div>
+<div class="modal-footer" id="footer">
+    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+</div>
+
